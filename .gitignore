@@ -1,0 +1,4 @@
+**/node_modules
+**/.env# Environment configuration
+**/.env
+piyushrrathor/auth-ticketing
