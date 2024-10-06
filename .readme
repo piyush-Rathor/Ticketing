@@ -1,0 +1,10 @@
+# Ticking.dev
+A Microservice app template for beginners to setup a microservice app
+
+## Features
+- Auth Service
+- Skaffold dev
+
+## Installation
+A service for auth node/express with typescript to use that just clone the project in local install node20 lts version and install docker desktop and install kubernetes from that and also install ingress/nginx for routing
+

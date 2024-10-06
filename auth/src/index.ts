@@ -1,5 +1,6 @@
 import express, { Express, Request, Response } from "express";
 import chalk from 'chalk'
+import mongoose from "mongoose";
 import 'dotenv/config'
 import reqMiddleware from "./middlewares/req.middleware";
 import resMiddleware from "./middlewares/res.middleware";
@@ -12,15 +13,21 @@ const app: Express = express();
 reqMiddleware(app);
 resMiddleware(app.response);
 
-app.use('/api', (req,res)=>{
-  return res.success('')
-});
 app.use('/api/users', routes);
 app.use(notFoundRouter);
 
-app.listen(constants.PORT, () => {
-  console.log(`
-    Server is running on port: ${chalk.bold.blueBright(constants.PORT)}
-    ENV: ${chalk.blueBright(constants.ENV)}`
-  )
-});
+
+(async () => {
+  try {
+    await mongoose.connect(constants.MONGO_URI)
+    app.listen(constants.PORT, () => {
+      console.log(`
+        Database connected !!!
+        Server is running on port: ${chalk.bold.blueBright(constants.PORT)}
+        ENV: ${chalk.blueBright(constants.ENV)}`
+      )
+    });
+  } catch (error) {
+    console.log(chalk.bold.redBright('Database not connected', JSON.stringify(error)))
+  }
+})()

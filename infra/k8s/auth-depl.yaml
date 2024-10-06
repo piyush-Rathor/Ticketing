@@ -14,7 +14,13 @@ spec:
     spec:
       containers:
         - name: auth
-          image: piyushrrathor/auth-ticketing
+          image: piyushrrathor/auth
+          env: # command that we run=> kubectl create secret generic secrets --from-literal=JWT_KEY=<secret>
+            - name: JWT_KEY #we are going to access with this name
+              valueFrom:
+                secretKeyRef:
+                  name: secrets # object name that we that we took while hitting command
+                  key: JWT_KEY # with this name we update the data
 ---
 apiVersion: v1
 kind: Service
@@ -23,11 +29,8 @@ metadata:
 spec:
   selector:
     app: auth
-  ports: 
+  ports:
     - name: auth
       protocol: TCP
-      port: 8080
-      targetport: 8080
-
-
-
+      port: 3000
+      targetPort: 3000
