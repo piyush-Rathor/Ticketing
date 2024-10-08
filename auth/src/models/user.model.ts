@@ -1,14 +1,20 @@
-import mongoose, { Document } from 'mongoose'
+import mongoose, { Document, ObjectId } from 'mongoose'
 import bcrypt from 'bcrypt'
 
 export interface IUser extends Document {
-    _id: string;
+    _id: ObjectId;
     email: string;
     password: string;
-    createdAt?: Date;
-    updatedAt?: Date;
+    createdAt: NativeDate;
+    updatedAt: NativeDate;
     isActive: boolean;
 }
+
+interface IUserMethods {
+    saveUser(): Promise<IUserWithId>;
+}
+
+export type IUserWithId = Omit<IUser, '_id' | 'password'> & { id: string, createdAt: Date, updatedAt: Date };
 
 const userSchema = new mongoose.Schema({
     email: {
@@ -34,26 +40,24 @@ const userSchema = new mongoose.Schema({
 });
 
 
-// Middleware to hash the password before saving the user
-userSchema.pre('save', async function (next) {
-    if (this.isModified('password')) {
-        this.password = await bcrypt.hash(this.password, 10);
-    }
-    this.updatedAt = new Date();
-    next();
-});
-
-// Method to convert _id to id
 userSchema.set('toJSON', {
     transform: (doc, ret) => {
-        ret.id = ret._id; // Rename _id to id
-        delete ret._id; // Remove _id from the output
-        delete ret.__v; // Optionally remove __v (version key)
-        return ret;
-    }
+        const { _id, password, ...rest } = ret;
+        return {
+            id: _id.toString(),
+            ...rest,
+        } as IUserWithId;
+    },
 });
 
-// Create the User model
-const User = mongoose.model('User', userSchema);
+userSchema.methods.saveUser = async function (): Promise<IUserWithId> {
+    if (this.isModified('password'))
+        this.password = bcrypt.hashSync(this.password, 10);
+    const savedUser = await this.save();
+    return savedUser.toJSON() as IUserWithId;
+};
+
+
+const User = mongoose.model<IUser, mongoose.Model<IUser & IUserMethods>>('User', userSchema);
 
 export default User;

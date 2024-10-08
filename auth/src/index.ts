@@ -28,6 +28,6 @@ app.use(notFoundRouter);
       )
     });
   } catch (error) {
-    console.log(chalk.bold.redBright('Database not connected', JSON.stringify(error)))
+    console.log(chalk.bold.redBright('Database not connected!! error:', JSON.stringify(error)))
   }
 })()

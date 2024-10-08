@@ -1,9 +1,13 @@
 import * as express from "express";
+import { IUserWithId } from "../models/user.model";
 
 declare global {
   declare namespace Express {
-    export interface Request {
-      token?: string
+    export interface Request<B = any, Q = any, P = any> {
+      user?: IUserWithId
+      body: B
+      query: Q;
+      params: P;
     }
     export interface Response {
       success: <T = unknown>(message: string, data?: T) => Promise<void>;

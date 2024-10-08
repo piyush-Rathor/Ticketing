@@ -1,14 +1,15 @@
 import { Router } from "express";
 import * as controller from "../controllers";
-import { UserDTO } from "../utils/validations/sign-in";
+import { UserSignupDTO } from "../utils/validations/sign-up";
+import { UserSignInDTO } from "../utils/validations/sign-in";
 import { validateDto } from "../middlewares/validation.middleware";
+import checkToken from "../middlewares/auth.middleware";
 
 const routes = Router();
 
-routes.post('/sign-in', validateDto(UserDTO), controller.signInController)
-routes.post('/sign-up', controller.signUpController)
-routes.post('/sign-out', controller.signOutController)
-routes.get('/user-details', controller.userDetailsController)
+routes.post('/sign-in', validateDto<UserSignInDTO>(UserSignInDTO), controller.signInController)
+routes.post('/sign-up', validateDto<UserSignupDTO>(UserSignupDTO), controller.signUpController)
+routes.get('/user-details', checkToken, controller.userDetailsController)
 
 
 export default routes
