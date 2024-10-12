@@ -7,6 +7,6 @@ export class UserSignInDTO {
 
     @IsNotEmpty({ message: 'Password is required' })
     @IsString()
-    @Length(6)
+    @Length(6, undefined, { message: 'Password must be at least 6 characters' })
     password: string = '';
 }

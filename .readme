@@ -8,3 +8,8 @@ A Microservice app template for beginners to setup a microservice app
 ## Installation
 A service for auth node/express with typescript to use that just clone the project in local install node20 lts version and install docker desktop and install kubernetes from that and also install ingress/nginx for routing
 
+Need to add domain in the local hosts file (for testing in local with dummy will cache domain locally)
+FOR WINDOWS:- C:\Windows/System32\Drivers\etc\hosts
+FOR MAC/Linux:- /etc/hosts
+
+127.0.0.1 ticketing.dev
